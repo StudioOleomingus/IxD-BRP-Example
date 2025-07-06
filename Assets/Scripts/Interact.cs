@@ -48,6 +48,13 @@ public class Interact : MonoBehaviour
             currentObj = hit.collider.gameObject;
             if (currentObj.tag == "Interactable")
             {
+                if(storedIntObj != null)
+                {
+                    if (storedIntObj != currentObj)
+                    {
+                        storedIntObj.transform.SendMessage("ResetHovering", hit.point, SendMessageOptions.DontRequireReceiver);
+                    }
+                }
                 storedIntObj = currentObj;
                 dist = Vector3.Distance(hit.transform.position, this.transform.position);
                 if (dist < 3)
@@ -57,7 +64,7 @@ public class Interact : MonoBehaviour
                     if (!alreadyHovered)
                     {
                         anim.Play("An_InteractTextPopup");
-                        CrosshairUI.SetActive(true);
+                        //CrosshairUI.SetActive(true);
                         alreadyHovered2 = false;
                         alreadyHovered = true;
                     }
@@ -71,10 +78,22 @@ public class Interact : MonoBehaviour
                         hit.transform.SendMessage("Looking", SendMessageOptions.DontRequireReceiver);
                     }
                 }
+                else
+                {
+                    storedIntObj.transform.SendMessage("ResetHovering", hit.point, SendMessageOptions.DontRequireReceiver);
+                }
             }
             else if (hit.transform.tag != "Interactable")
             {
-                CrosshairUI.SetActive(false);
+                //CrosshairUI.SetActive(false);
+
+                if (storedIntObj != null)
+                {
+                    if (storedIntObj != currentObj)
+                    {
+                        storedIntObj.transform.SendMessage("ResetHovering", hit.point, SendMessageOptions.DontRequireReceiver);
+                    }
+                }
 
                 hover = false;
                 alreadyHovered = false;
@@ -94,7 +113,7 @@ public class Interact : MonoBehaviour
         {
             hover = false;
             dispText.text = "";
-            CrosshairUI.SetActive(false);
+            //CrosshairUI.SetActive(false);
             storedIntObj = null;
         }
     }

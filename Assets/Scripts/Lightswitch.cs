@@ -10,7 +10,8 @@ using UnityEngine;
 
  */
 
-public class Lightswitch : MonoBehaviour {
+public class Lightswitch : InteractableObject
+{
     [Header("Lightswitch that toggles light")]
     private bool turnedOn;
     private bool canInteract = true;
@@ -35,8 +36,10 @@ public class Lightswitch : MonoBehaviour {
     [Tooltip("Light Renderer, the bulb, must have emissive color not black!")]
     public Renderer lightRend;
     
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         MainCam = GameObject.FindWithTag("MainCamera");
         if (MainCam == null)
         {
@@ -58,14 +61,22 @@ public class Lightswitch : MonoBehaviour {
         }
     }
 
-    public void Hovering()
+    public override void Hovering(Vector3 rayHitPoint)
     {
+
+        base.Hovering(rayHitPoint);
+
         over = true;
         StartCoroutine(Fadeout());
         if (!turnedOn)
             InteractionScript.message = prompts[0];
         else if (turnedOn)
             InteractionScript.message = prompts[1];
+    }
+
+    public override void ResetHovering(Vector3 rayHitPoint)
+    {
+        base.ResetHovering(rayHitPoint);
     }
 
     public void Interacting()

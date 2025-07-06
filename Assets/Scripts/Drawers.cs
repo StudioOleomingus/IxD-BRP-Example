@@ -11,7 +11,8 @@ using UnityEngine;
  */
 
 [RequireComponent(typeof(AudioSource))]
-public class Drawers : MonoBehaviour {
+public class Drawers : InteractableObject
+{
     [Header("For filing cabinets/desk drawers/sliding doors")] 
     private bool moved;
     [Tooltip("Audio clips - 0 open drawer, 1 close drawer")]
@@ -38,7 +39,9 @@ public class Drawers : MonoBehaviour {
     public string[] prompts = {"Open Drawer", "Close Drawer" };//0 open drawer, 1 close drawer
 
     // Use this for initialization
-    void Start () {
+    public override void Start()
+    {
+        base.Start();
         Source = gameObject.GetComponent<AudioSource>();
         originPos = transform.position;
         renderers = GetComponentsInChildren<Renderer>();
@@ -54,9 +57,11 @@ public class Drawers : MonoBehaviour {
         }
         InteractionScript = MainCam.GetComponent<Interact>();
     }
-	
-    public void Hovering()
+
+    public override void Hovering(Vector3 rayHitPoint)
     {
+        base.Hovering(rayHitPoint);
+
         over = true;
         StartCoroutine(Fadeout());
         if(!moved)
@@ -65,7 +70,12 @@ public class Drawers : MonoBehaviour {
             InteractionScript.message = prompts[1];
     }
 
-	public void Interacting() {
+    public override void ResetHovering(Vector3 rayHitPoint)
+    {
+        base.ResetHovering(rayHitPoint);
+    }
+
+    public void Interacting() {
         if (canInteract)
         {
             moved = !moved;

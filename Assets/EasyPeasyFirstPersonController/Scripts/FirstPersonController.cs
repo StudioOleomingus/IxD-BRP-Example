@@ -67,6 +67,10 @@ namespace EasyPeasyFirstPersonController
         private float currentTiltAngle;
         private float tiltVelocity;
 
+        private RaycastHit hit;
+        private float rayDistance;
+        private Vector3 contactPoint;
+
         public float CurrentCameraHeight => isCrouching || isSliding ? crouchCameraHeight : originalCameraParentHeight;
 
         private void Awake()
@@ -87,6 +91,11 @@ namespace EasyPeasyFirstPersonController
             currentTiltAngle = 0f;
         }
 
+        private void Start()
+        {
+            rayDistance = characterController.height * 0.5f + characterController.radius;
+        }
+
         private void Update()
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -99,6 +108,34 @@ namespace EasyPeasyFirstPersonController
             {
                 coyoteTimer -= Time.deltaTime;
             }
+
+            if (isGrounded)
+            {
+                if (Physics.Raycast(transform.position, -Vector3.up, out hit, rayDistance))
+                {
+
+                }
+                else
+                {
+                    Physics.Raycast(contactPoint + Vector3.up, -Vector3.up, out hit);
+                }
+
+                //check if on elevator pad surface
+                if (hit.collider.tag == "MovingPlatform")
+                {
+                    if (transform.parent != hit.collider.gameObject)
+                    {
+                        transform.parent = hit.collider.transform;
+                        //onPlatform = true;
+                    }
+                }
+                else
+                {
+                    transform.parent = null;
+                    //onPlatform = false;
+                }
+            }
+
 
             if (isLook)
             {
@@ -255,6 +292,12 @@ namespace EasyPeasyFirstPersonController
                 moveDirection = new Vector3(moveVector.x, moveDirection.y, moveVector.z);
                 characterController.Move(moveDirection * Time.deltaTime);
             }
+        }
+
+        // Store point that we're in contact with for use in FixedUpdate if needed
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            contactPoint = hit.point;
         }
 
         public void SetControl(bool newState)

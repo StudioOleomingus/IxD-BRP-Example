@@ -9,7 +9,7 @@ using UnityEngine;
     Please use in your walking sims/horror/adventure/puzzle games! Drop me a line and share what make with it! :)    
 
  */
-public class ElevatorButton : MonoBehaviour
+public class ElevatorButton : InteractableObject
 {
     private Renderer buttonRend;
     private Color originColor;
@@ -29,8 +29,10 @@ public class ElevatorButton : MonoBehaviour
     public Elevator elevatorScript;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         MainCam = GameObject.FindWithTag("MainCamera");
         if (MainCam == null)
         {
@@ -43,8 +45,10 @@ public class ElevatorButton : MonoBehaviour
         pushedInPos = new Vector3(pushedOutPos.x, pushedOutPos.y, pushedOutPos.z - .015f /* -.015f is the distance of the button press-in */);
     }
 
-    public void Hovering(Vector3 rayHitPoint)
+    public override void Hovering(Vector3 rayHitPoint)
     {
+        base.Hovering(rayHitPoint);
+
         over = true;
         if (isButtonUp)
         {
@@ -55,6 +59,11 @@ public class ElevatorButton : MonoBehaviour
             InteractionScript.message = prompts[1];
         }
         StartCoroutine(Fadeout());
+    }
+
+    public override void ResetHovering(Vector3 rayHitPoint)
+    {
+        base.ResetHovering(rayHitPoint);
     }
 
     public void Interacting()

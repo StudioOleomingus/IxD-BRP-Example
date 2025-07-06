@@ -11,7 +11,7 @@ using UnityEngine;
  */
 
 [RequireComponent(typeof(AudioSource))]
-public class GrabbableObject : MonoBehaviour {
+public class GrabbableObject : InteractableObject {
     [HideInInspector]
     public bool beingCarried = false;
     private Rigidbody rigid;
@@ -40,7 +40,7 @@ public class GrabbableObject : MonoBehaviour {
     private bool rotating = false;
     private Quaternion rotateBy;
     [Tooltip("set to 2 default")]
-    public MouseLook[] lookScript;
+    //public MouseLook[] lookScript;
     private Vector3 originPos;
     private Quaternion originRot;
     [Tooltip("if object is returned to original position, snaps into place")]
@@ -51,7 +51,9 @@ public class GrabbableObject : MonoBehaviour {
     private bool muteCollSound = true;
 
     // Use this for initialization
-    void Start () {
+    public override void Start () {
+        base.Start ();
+
         rigid = gameObject.GetComponent<Rigidbody>();
         MainCam = GameObject.FindWithTag("MainCamera");
         if (MainCam == null)
@@ -64,13 +66,20 @@ public class GrabbableObject : MonoBehaviour {
         StartCoroutine(SetOriginTrans());
     }
 
-    public void Hovering()
+    public override void Hovering(Vector3 rayHitPoint)
     {
+        base.Hovering(rayHitPoint);
         over = true;
         StartCoroutine(Fadeout());
         if (!beingCarried)
             InteractionScript.message = prompts[0];
     }
+
+    public override void ResetHovering(Vector3 rayHitPoint)
+    {
+        base.ResetHovering(rayHitPoint);
+    }
+
     public void Interacting()
     {
         beingCarried = !beingCarried;
@@ -83,10 +92,10 @@ public class GrabbableObject : MonoBehaviour {
             source.clip = clips[1];//Throw
             source.Play();
             rotating = false;
-            for (int i = 0; i < lookScript.Length; i++)
+            /*for (int i = 0; i < lookScript.Length; i++)
             {
                 lookScript[i].working = true;
-            }
+            }*/
             touched = false;
         }
         else if (beingCarried)
@@ -100,7 +109,7 @@ public class GrabbableObject : MonoBehaviour {
             objectReset = false;
         }
         InteractionScript.message = prompts[1];
-        InteractionScript.CrosshairUI.SetActive(false);
+        //InteractionScript.CrosshairUI.SetActive(false);
     }
 
     public void RelativeRotate(float rotateLeftRight, float rotateUpDown)
@@ -151,10 +160,10 @@ public class GrabbableObject : MonoBehaviour {
             transform.parent = null;
             beingCarried = false;
             rotating = false;
-            for (int i = 0; i < lookScript.Length; i++)
+            /*for (int i = 0; i < lookScript.Length; i++)
             {
                 lookScript[i].working = true;
-            }
+            }*/
             touched = false;
         }
     }
@@ -165,10 +174,10 @@ public class GrabbableObject : MonoBehaviour {
         {
             if (Input.GetButtonDown("Squint") && !rotating)
             {
-                for (int i = 0; i < lookScript.Length; i++)
+                /*for (int i = 0; i < lookScript.Length; i++)
                 {
                     lookScript[i].working = false;
-                }
+                }*/
                 rotating = true;
             }
             if (Input.GetButton("Squint"))
@@ -177,10 +186,10 @@ public class GrabbableObject : MonoBehaviour {
             }
             if (Input.GetButtonUp("Squint") && rotating)
             {
-                for (int i = 0; i < lookScript.Length; i++)
+                /*for (int i = 0; i < lookScript.Length; i++)
                 {
                     lookScript[i].working = true;
-                }
+                }*/
                 rotating = false;
             } 
         }
