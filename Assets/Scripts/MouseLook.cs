@@ -131,4 +131,14 @@ public class MouseLook : MonoBehaviour
             }
         }
     }
+
+    public void SetWorkingState(bool value)
+    {
+        working = value;
+
+        if (!value && axes == RotationAxes.MouseY)
+        {
+            transform.localRotation = Quaternion.identity;
+        }
+    }
 }

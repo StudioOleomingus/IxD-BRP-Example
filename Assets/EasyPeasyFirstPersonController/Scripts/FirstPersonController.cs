@@ -137,7 +137,7 @@ namespace EasyPeasyFirstPersonController
             }
 
 
-            if (isLook)
+            /*if (isLook)
             {
                 float mouseX = Input.GetAxis("Mouse X") * 10 * mouseSensitivity * Time.deltaTime;
                 float mouseY = Input.GetAxis("Mouse Y") * 10 * mouseSensitivity * Time.deltaTime;
@@ -153,7 +153,7 @@ namespace EasyPeasyFirstPersonController
                 currentTiltAngle = Mathf.SmoothDamp(currentTiltAngle, targetTiltAngle, ref tiltVelocity, 0.2f);
                 playerCamera.transform.localRotation = Quaternion.Euler(yVelocity - currentTiltAngle, 0f, 0f);
                 transform.rotation = Quaternion.Euler(0f, xVelocity, 0f);
-            }
+            }*/
 
             HandleHeadBob();
 

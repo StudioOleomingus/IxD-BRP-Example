@@ -40,7 +40,7 @@ public class GrabbableObject : InteractableObject {
     private bool rotating = false;
     private Quaternion rotateBy;
     [Tooltip("set to 2 default")]
-    //public MouseLook[] lookScript;
+    public MouseLook[] lookScript;
     private Vector3 originPos;
     private Quaternion originRot;
     [Tooltip("if object is returned to original position, snaps into place")]
@@ -92,10 +92,10 @@ public class GrabbableObject : InteractableObject {
             source.clip = clips[1];//Throw
             source.Play();
             rotating = false;
-            /*for (int i = 0; i < lookScript.Length; i++)
+            for (int i = 0; i < lookScript.Length; i++)
             {
-                lookScript[i].working = true;
-            }*/
+                lookScript[i].SetWorkingState(true);
+            }
             touched = false;
         }
         else if (beingCarried)
@@ -160,10 +160,10 @@ public class GrabbableObject : InteractableObject {
             transform.parent = null;
             beingCarried = false;
             rotating = false;
-            /*for (int i = 0; i < lookScript.Length; i++)
+            for (int i = 0; i < lookScript.Length; i++)
             {
-                lookScript[i].working = true;
-            }*/
+                lookScript[i].SetWorkingState(true);
+            }
             touched = false;
         }
     }
@@ -174,10 +174,10 @@ public class GrabbableObject : InteractableObject {
         {
             if (Input.GetButtonDown("Squint") && !rotating)
             {
-                /*for (int i = 0; i < lookScript.Length; i++)
+                for (int i = 0; i < lookScript.Length; i++)
                 {
-                    lookScript[i].working = false;
-                }*/
+                    lookScript[i].SetWorkingState(false);
+                }
                 rotating = true;
             }
             if (Input.GetButton("Squint"))
@@ -186,10 +186,10 @@ public class GrabbableObject : InteractableObject {
             }
             if (Input.GetButtonUp("Squint") && rotating)
             {
-                /*for (int i = 0; i < lookScript.Length; i++)
+                for (int i = 0; i < lookScript.Length; i++)
                 {
-                    lookScript[i].working = true;
-                }*/
+                    lookScript[i].SetWorkingState(true);
+                }
                 rotating = false;
             } 
         }
