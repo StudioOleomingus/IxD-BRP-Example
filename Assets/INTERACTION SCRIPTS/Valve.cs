@@ -11,7 +11,7 @@ using UnityEngine;
  */
 
 [RequireComponent(typeof(AudioSource))]
-public class Valve : MonoBehaviour
+public class Valve : InteractableObject
 {
     private Renderer rend; //valve's renderer, mesh
     private Color originColor;
@@ -30,8 +30,9 @@ public class Valve : MonoBehaviour
     private AudioSource valveSource;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
         MainCam = GameObject.FindWithTag("MainCamera");
         if (MainCam == null)
         {
@@ -44,8 +45,9 @@ public class Valve : MonoBehaviour
         valveSource.loop = true;
     }
 
-    public void Hovering(Vector3 rayHitPoint)
+    public override void Hovering(Vector3 rayHitPoint)
     {
+        base.Hovering(rayHitPoint);
         over = true;
         //check which side the raycast hit, but with the parent that doesn't rotate
         Vector3 relativePosition = transform.parent.InverseTransformPoint(rayHitPoint);
@@ -66,6 +68,11 @@ public class Valve : MonoBehaviour
             InteractionScript.message = "Turn Valve Right";
         }
         rotSpd = 90;
+    }
+
+    public override void ResetHovering(Vector3 rayHitPoint)
+    {
+        base.ResetHovering(rayHitPoint);
     }
 
     public void UnHover()

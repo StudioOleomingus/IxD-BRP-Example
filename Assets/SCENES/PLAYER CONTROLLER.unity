@@ -9526,6 +9526,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: -8061390372239369459, guid: b71e618d1ab211b458b4875f4311becf, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b71e618d1ab211b458b4875f4311becf, type: 3}
       propertyPath: m_Name
       value: SM_PipeValve
@@ -9584,6 +9588,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8863367434314212803, guid: b71e618d1ab211b458b4875f4311becf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1430165048}
+    - targetCorrespondingSourceObject: {fileID: 8863367434314212803, guid: b71e618d1ab211b458b4875f4311becf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1430165052}
   m_SourcePrefab: {fileID: 100100000, guid: b71e618d1ab211b458b4875f4311becf, type: 3}
 --- !u!4 &1430165041 stripped
 Transform:
@@ -9756,6 +9763,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1430165052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1430165042}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 4
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1001 &1444721320
 PrefabInstance:
   m_ObjectHideFlags: 0
