@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
+    public string objectName = "";
+    public bool isInventoryItem = false;
+    public string itemNeededToInteract = "";
     private Outline outlineComp;
 
     public virtual void Start()

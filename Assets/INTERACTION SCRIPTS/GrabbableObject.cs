@@ -191,7 +191,12 @@ public class GrabbableObject : InteractableObject {
                     lookScript[i].SetWorkingState(true);
                 }
                 rotating = false;
-            } 
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1) && isInventoryItem)
+            {
+                InventoryManager.Instance.AddItem(objectName);
+            }
         }
         else
         {

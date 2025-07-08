@@ -9,7 +9,7 @@ using UnityEngine;
     Please use in your walking sims/horror/adventure/puzzle games! Drop me a line and share what make with it! :)    
 
  */
-public class Door : MonoBehaviour
+public class Door : InteractableObject
 {
     [Header("Traditional Pull/Push door. Uses hinge joint")]
     [Tooltip("Rotation of the door closed")]
@@ -35,11 +35,12 @@ public class Door : MonoBehaviour
     public AudioSource Source;
     [Tooltip("0 door swing out, 1 door swing in, 2 door shut")]
     public AudioClip[] clips;
-    
+
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
         MainCam = GameObject.FindWithTag("MainCamera");
         if (MainCam == null)
         {
@@ -55,8 +56,9 @@ public class Door : MonoBehaviour
         doorRigid = GetComponent<Rigidbody>();
     }
 
-    public void Hovering(Vector3 rayHitPoint)
+    public override void Hovering(Vector3 rayHitPoint)
     {
+        base.Hovering(rayHitPoint);
         over = true;
         StartCoroutine(Fadeout());
         if (isLocked)
@@ -70,8 +72,18 @@ public class Door : MonoBehaviour
         storedRayHitPt = rayHitPoint;
     }
 
+    public override void ResetHovering(Vector3 rayHitPoint)
+    {
+        base.ResetHovering(rayHitPoint);
+    }
+
     public void Interacting()
     {
+        if (!InventoryManager.Instance.HasItem(itemNeededToInteract))
+        {
+            return;
+        }
+
         doorRigid.isKinematic = false;
         heading = (playerObj.transform.position - transform.position).normalized;
         dot = Vector3.Dot(heading, transform.up);

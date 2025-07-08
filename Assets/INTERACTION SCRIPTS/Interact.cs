@@ -82,6 +82,8 @@ public class Interact : MonoBehaviour
                 {
                     storedIntObj.transform.SendMessage("ResetHovering", hit.point, SendMessageOptions.DontRequireReceiver);
                 }
+
+                
             }
             else if (hit.transform.tag != "Interactable")
             {
