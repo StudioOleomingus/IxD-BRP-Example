@@ -3,6 +3,8 @@ namespace EasyPeasyFirstPersonController
     using System;
     using System.Collections;
     using UnityEngine;
+    using UnityEngine.InputSystem.XR;
+    using Input = UnityEngine.Input;
 
     public partial class FirstPersonController : MonoBehaviour
     {
@@ -71,6 +73,13 @@ namespace EasyPeasyFirstPersonController
         private float rayDistance;
         private Vector3 contactPoint;
 
+
+        private float climbSpeed = 0;
+        private bool onLadder = false;
+        private bool onPlatform = false;
+        private float defSlopeLimit = 45;
+
+
         public float CurrentCameraHeight => isCrouching || isSliding ? crouchCameraHeight : originalCameraParentHeight;
 
         private void Awake()
@@ -136,24 +145,52 @@ namespace EasyPeasyFirstPersonController
                 }
             }
 
-
-            /*if (isLook)
+            //if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - characterController.height / 2 + .1f, transform.position.z), transform.TransformDirection(Vector3.forward), out hit,  3f))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1.0f))
             {
-                float mouseX = Input.GetAxis("Mouse X") * 10 * mouseSensitivity * Time.deltaTime;
-                float mouseY = Input.GetAxis("Mouse Y") * 10 * mouseSensitivity * Time.deltaTime;
+                if (hit.collider.tag == "Ladder")
+                {
+                    onLadder = true;
+                    gravity = 0;
+                    float topY = hit.collider.bounds.max.y;
+                    if (transform.position.y < topY)
+                    {
+                        //inputY = 0;
+                        //use camera pitch as input
+                        climbSpeed = Mathf.Sin(cameraParent.transform.localRotation.x) * -3;
 
-                rotX += mouseX;
-                rotY -= mouseY;
-                rotY = Mathf.Clamp(rotY, -90f, 90f);
+                        Debug.Log("climbSpeed: " + climbSpeed);
+                        //-1.8 to 1.8
+                        if (climbSpeed > .5f || climbSpeed < -.5f)
+                        {
+                            /*if (!ladderClimbSource.isPlaying)
+                            {
+                                ladderClimbSource.Play();
+                            }*/
+                        }
+                        //ladderClimbSource.pitch = Mathf.Clamp(Mathf.Abs(climbSpeed), -2, 2);
+                    }
+                }
+                else
+                {
+                    onLadder = false;
+                    gravity = 9.8f;
+                    /*if (ladderClimbSource.isPlaying)
+                    {
+                        ladderClimbSource.Stop();
+                    }*/
+                }
+            }
+            else
+            {
+                onLadder = false;
+                gravity = 9.8f;
+                /*if (ladderClimbSource.isPlaying)
+                {
+                    ladderClimbSource.Stop();
+                }*/
+            }
 
-                xVelocity = Mathf.Lerp(xVelocity, rotX, snappiness * Time.deltaTime);
-                yVelocity = Mathf.Lerp(yVelocity, rotY, snappiness * Time.deltaTime);
-
-                float targetTiltAngle = isSliding ? slideTiltAngle : 0f;
-                currentTiltAngle = Mathf.SmoothDamp(currentTiltAngle, targetTiltAngle, ref tiltVelocity, 0.2f);
-                playerCamera.transform.localRotation = Quaternion.Euler(yVelocity - currentTiltAngle, 0f, 0f);
-                transform.rotation = Quaternion.Euler(0f, xVelocity, 0f);
-            }*/
 
             HandleHeadBob();
 
@@ -260,7 +297,16 @@ namespace EasyPeasyFirstPersonController
 
         private void HandleMovement()
         {
-            moveInput.x = Input.GetAxis("Horizontal");
+            if (!onLadder)
+            {
+                moveInput.x = Input.GetAxis("Horizontal");
+            }
+            else
+            {
+                moveInput.x = 0;
+            }
+
+            //moveInput.x = Input.GetAxis("Horizontal");
             moveInput.y = Input.GetAxis("Vertical");
             isSprinting = canSprint && Input.GetKey(KeyCode.LeftShift) && moveInput.y > 0.1f && isGrounded && !isCrouching && !isSliding;
 
@@ -289,8 +335,19 @@ namespace EasyPeasyFirstPersonController
 
             if (!isSliding)
             {
-                moveDirection = new Vector3(moveVector.x, moveDirection.y, moveVector.z);
-                characterController.Move(moveDirection * Time.deltaTime);
+                if (!onLadder)
+                {
+                   /* // Apply gravity
+                    moveDirection.y -= gravity * Time.deltaTime;*/
+
+                    moveDirection = new Vector3(moveVector.x, moveDirection.y, moveVector.z);
+                    characterController.Move(moveDirection * Time.deltaTime);
+                }
+                else
+                {
+                    characterController.Move(new Vector3(0, climbSpeed, 3) * Time.deltaTime);
+                }
+                
             }
         }
 
