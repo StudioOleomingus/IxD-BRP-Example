@@ -196,6 +196,8 @@ public class GrabbableObject : InteractableObject {
             if (Input.GetKeyDown(KeyCode.Alpha1) && isInventoryItem)
             {
                 InventoryManager.Instance.AddItem(objectName);
+
+                Destroy(gameObject);
             }
         }
         else
