@@ -63,7 +63,22 @@ public class Door : InteractableObject
         StartCoroutine(Fadeout());
         if (isLocked)
         {
-            InteractionScript.message = prompts[0];
+            if (!string.IsNullOrEmpty(itemNeededToInteract))
+            {
+                if (!InventoryManager.Instance.HasItem(itemNeededToInteract))
+                {
+                    InteractionScript.message = "Locked. Requires " + itemNeededToInteract + " to open.";
+                    return;
+                }
+                else
+                {
+                    InteractionScript.message = prompts[0];
+                }
+            }
+            else
+            {
+                InteractionScript.message = prompts[0];
+            }
         }
         else
         {
@@ -79,9 +94,12 @@ public class Door : InteractableObject
 
     public void Interacting()
     {
-        if (!InventoryManager.Instance.HasItem(itemNeededToInteract))
+        if (!string.IsNullOrEmpty(itemNeededToInteract))
         {
-            return;
+            if (!InventoryManager.Instance.HasItem(itemNeededToInteract))
+            {
+                return;
+            }
         }
 
         doorRigid.isKinematic = false;
